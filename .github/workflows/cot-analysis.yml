@@ -1,0 +1,83 @@
+name: COT analysis
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_outputs:
+        description: "Commit generated CSVs back to the repo"
+        required: false
+        default: "false"
+      commit_message:
+        description: "Commit message for generated outputs (if commit_outputs is true)"
+        required: false
+        default: "Add COT analysis outputs (auto)"
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/**"
+      - "Historical FX Future & Options Combined.txt"
+      - "Gold and Silver.txt"
+      - ".github/workflows/cot-analysis.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  run-cot-analysis:
+    runs-on: ubuntu-latest
+    env:
+      COMMIT_OUTPUTS: ${{ inputs.commit_outputs }}
+      COMMIT_MESSAGE: ${{ inputs.commit_message }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          if [ -f scripts/requirements.txt ]; then
+            pip install -r scripts/requirements.txt
+          else
+            pip install pandas numpy
+          fi
+
+      - name: Prepare output directory
+        run: mkdir -p data/clean
+
+      - name: Extract GOLD and SILVER
+        run: |
+          python scripts/extract_gold_silver.py --input "Gold and Silver.txt" --outdir data/clean
+
+      - name: Build FX COT summary (EUR, GBP, JPY, CHF, AUD, NZD, CAD)
+        run: |
+          python scripts/fx_cot_brief.py --input "Historical FX Future & Options Combined.txt"
+
+      - name: Upload CSV artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cot-csv-outputs
+          path: |
+            data/clean/gold_cot.csv
+            data/clean/silver_cot.csv
+            data/clean/fx_cot_summary.csv
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Commit outputs back (optional)
+        if: env.COMMIT_OUTPUTS == 'true'
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add data/clean/*.csv || true
+          if ! git diff --cached --quiet; then
+            msg="${COMMIT_MESSAGE:-Add COT analysis outputs (auto)}"
+            git commit -m "$msg"
+            git push
+          else
+            echo "No changes to commit."
+          fi
