@@ -1,0 +1,227 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>COT Trader Brief</title>
+        <style>
+            body { 
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                margin: 0; 
+                padding: 20px; 
+                background-color: #f5f5f5; 
+                color: #333;
+            }
+            .container { 
+                max-width: 1200px; 
+                margin: 0 auto; 
+                background: white; 
+                padding: 30px; 
+                border-radius: 10px; 
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            h1 { 
+                color: #2c3e50; 
+                text-align: center; 
+                border-bottom: 3px solid #3498db; 
+                padding-bottom: 10px;
+            }
+            h2 { 
+                color: #34495e; 
+                margin-top: 40px; 
+                border-left: 4px solid #3498db; 
+                padding-left: 15px;
+            }
+            h3 { 
+                color: #2980b9; 
+                margin-bottom: 10px;
+            }
+            .asset-summary { 
+                background: #f8f9fa; 
+                border: 1px solid #e9ecef; 
+                border-radius: 8px; 
+                padding: 20px; 
+                margin: 20px 0;
+                border-left: 4px solid #3498db;
+            }
+            .chart-container { 
+                text-align: center; 
+                margin: 30px 0; 
+                padding: 20px;
+                background: #fafafa;
+                border-radius: 8px;
+            }
+            .chart-container img { 
+                max-width: 100%; 
+                height: auto; 
+                border-radius: 5px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            .methodology { 
+                background: #e8f4fd; 
+                padding: 20px; 
+                border-radius: 8px; 
+                margin: 30px 0;
+                border-left: 4px solid #2196F3;
+            }
+            .timestamp { 
+                text-align: center; 
+                color: #666; 
+                font-style: italic; 
+                margin-bottom: 30px;
+            }
+            .legend {
+                background: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 8px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .legend h4 {
+                margin-top: 0;
+                color: #856404;
+            }
+            .warning { 
+                background: #fff3cd; 
+                color: #856404; 
+                padding: 15px; 
+                border-radius: 5px; 
+                margin: 15px 0;
+                border: 1px solid #ffeaa7;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>📊 COT Trader Brief</h1>
+            <div class="timestamp">Generated on 2025-08-11 16:53 UTC</div>
+            
+            <div class="methodology">
+                <h4>📋 Methodology</h4>
+                <p><strong>Data Source:</strong> CFTC Commitments of Traders reports (Futures + Options Combined where available)</p>
+                <p><strong>Lookback Period:</strong> 3 years (156 weeks) for percentiles and z-scores</p>
+                <p><strong>Heavy Crowd Zones:</strong> ≥85th percentile (Extreme Long) or ≤15th percentile (Extreme Short)</p>
+                <p><strong>FX Focus:</strong> Leveraged Funds net positioning | <strong>Metals Focus:</strong> Managed Money net positioning</p>
+            </div>
+            
+            <div class="legend">
+                <h4>🚦 Crowd Status Legend</h4>
+                <p><strong>🔴 EXTREME LONG/SHORT (≥85% or ≤15%):</strong> High mean-reversion risk</p>
+                <p><strong>🟠 Elevated (70-84% or 16-30%):</strong> Moderate mean-reversion risk</p>
+                <p><strong>🟢 BALANCED (31-69%):</strong> Trend-continuation likely</p>
+            </div>
+    <h2>💱 Foreign Exchange</h2>
+
+        <div class="asset-summary">
+            <h3>AUSTRALIAN DOLLAR</h3>
+            <p><strong>As of 2025-08-05</strong></p>
+            <p><strong>Leveraged Funds Net:</strong> -13,823 contracts (-7.7% of OI)</p>
+            <p><strong>3-Year Percentile:</strong> 87% | <strong>Z-Score:</strong> +1.08</p>
+            <p><strong>13-Week Change:</strong> -936 contracts</p>
+            <p><strong>Crowd Status:</strong> 🔴 EXTREME LONG</p>
+            <p><strong>Implication:</strong> HIGH mean-reversion risk over next 4-8 weeks</p>
+        </div>
+        
+        <div class="asset-summary">
+            <h3>BRITISH POUND</h3>
+            <p><strong>As of 2025-08-05</strong></p>
+            <p><strong>Leveraged Funds Net:</strong> 37,269 contracts (+16.0% of OI)</p>
+            <p><strong>3-Year Percentile:</strong> 71% | <strong>Z-Score:</strong> +0.89</p>
+            <p><strong>13-Week Change:</strong> -8,139 contracts</p>
+            <p><strong>Crowd Status:</strong> 🟠 Elevated Long</p>
+            <p><strong>Implication:</strong> MODERATE mean-reversion risk over next 4-8 weeks</p>
+        </div>
+        
+        <div class="asset-summary">
+            <h3>CANADIAN DOLLAR</h3>
+            <p><strong>As of 2025-08-05</strong></p>
+            <p><strong>Leveraged Funds Net:</strong> -31,844 contracts (-14.2% of OI)</p>
+            <p><strong>3-Year Percentile:</strong> 77% | <strong>Z-Score:</strong> +0.88</p>
+            <p><strong>13-Week Change:</strong> -5,515 contracts</p>
+            <p><strong>Crowd Status:</strong> 🟠 Elevated Long</p>
+            <p><strong>Implication:</strong> MODERATE mean-reversion risk over next 4-8 weeks</p>
+        </div>
+        
+        <div class="asset-summary">
+            <h3>EURO FX</h3>
+            <p><strong>As of 2025-08-05</strong></p>
+            <p><strong>Leveraged Funds Net:</strong> 9,714 contracts (+1.0% of OI)</p>
+            <p><strong>3-Year Percentile:</strong> 94% | <strong>Z-Score:</strong> +1.13</p>
+            <p><strong>13-Week Change:</strong> -1,820 contracts</p>
+            <p><strong>Crowd Status:</strong> 🔴 EXTREME LONG</p>
+            <p><strong>Implication:</strong> HIGH mean-reversion risk over next 4-8 weeks</p>
+        </div>
+        
+        <div class="asset-summary">
+            <h3>JAPANESE YEN</h3>
+            <p><strong>As of 2025-08-05</strong></p>
+            <p><strong>Leveraged Funds Net:</strong> -29,308 contracts (-8.1% of OI)</p>
+            <p><strong>3-Year Percentile:</strong> 26% | <strong>Z-Score:</strong> -0.95</p>
+            <p><strong>13-Week Change:</strong> -50,010 contracts</p>
+            <p><strong>Crowd Status:</strong> 🟠 Elevated Short</p>
+            <p><strong>Implication:</strong> MODERATE mean-reversion risk over next 4-8 weeks</p>
+        </div>
+        
+        <div class="asset-summary">
+            <h3>NZ DOLLAR</h3>
+            <p><strong>As of 2025-08-05</strong></p>
+            <p><strong>Leveraged Funds Net:</strong> -6,778 contracts (-14.1% of OI)</p>
+            <p><strong>3-Year Percentile:</strong> 81% | <strong>Z-Score:</strong> +0.82</p>
+            <p><strong>13-Week Change:</strong> -1,330 contracts</p>
+            <p><strong>Crowd Status:</strong> 🟠 Elevated Long</p>
+            <p><strong>Implication:</strong> MODERATE mean-reversion risk over next 4-8 weeks</p>
+        </div>
+        
+        <div class="asset-summary">
+            <h3>SWISS FRANC</h3>
+            <p><strong>As of 2025-08-05</strong></p>
+            <p><strong>Leveraged Funds Net:</strong> -3,239 contracts (-3.5% of OI)</p>
+            <p><strong>3-Year Percentile:</strong> 55% | <strong>Z-Score:</strong> +0.45</p>
+            <p><strong>13-Week Change:</strong> -2,338 contracts</p>
+            <p><strong>Crowd Status:</strong> 🟢 BALANCED</p>
+            <p><strong>Implication:</strong> trend-continuation likely over next 4-8 weeks</p>
+        </div>
+        
+            <div class="chart-container">
+                <h3>FX Positioning Charts</h3>
+                <img src="fx_positioning.png" alt="FX Positioning Chart">
+            </div>
+            <h2>🥇 Precious Metals</h2>
+
+        <div class="asset-summary">
+            <h3>GOLD</h3>
+            <p><strong>As of 2025-08-05</strong></p>
+            <p><strong>Managed Money Net:</strong> 161,811 contracts (+24.1% of OI)</p>
+            <p><strong>3-Year Percentile:</strong> 77% | <strong>Z-Score:</strong> +0.90</p>
+            <p><strong>13-Week Change:</strong> +161,174 contracts</p>
+            <p><strong>Crowd Status:</strong> 🟠 Elevated Long</p>
+            <p><strong>Implication:</strong> MODERATE mean-reversion risk over next 4-8 weeks</p>
+        </div>
+        
+        <div class="asset-summary">
+            <h3>SILVER</h3>
+            <p><strong>As of 2025-08-05</strong></p>
+            <p><strong>Managed Money Net:</strong> 30,621 contracts (+16.3% of OI)</p>
+            <p><strong>3-Year Percentile:</strong> 35% | <strong>Z-Score:</strong> -0.72</p>
+            <p><strong>13-Week Change:</strong> +373 contracts</p>
+            <p><strong>Crowd Status:</strong> 🟢 BALANCED</p>
+            <p><strong>Implication:</strong> trend-continuation likely over next 4-8 weeks</p>
+        </div>
+        
+            <div class="chart-container">
+                <h3>Metals Positioning Charts</h3>
+                <img src="metals_positioning.png" alt="Metals Positioning Chart">
+            </div>
+            
+            <div class="methodology">
+                <h4>⚠️ Disclaimer</h4>
+                <p>This analysis is for educational purposes only and should not be considered investment advice. 
+                COT data reflects positioning as of the report date and can change rapidly. Past performance 
+                does not guarantee future results. Always consult with a qualified financial advisor before 
+                making investment decisions.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    

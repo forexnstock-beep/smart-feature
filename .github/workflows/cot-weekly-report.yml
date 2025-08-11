@@ -1,0 +1,108 @@
+name: COT Weekly Report
+
+on:
+  schedule:
+    # Run every Tuesday at 6:00 AM UTC (COT data typically released on Fridays)
+    - cron: '0 6 * * 2'
+  workflow_dispatch:
+    inputs:
+      force_refresh:
+        description: 'Force refresh of data files'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  generate-cot-report:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/requirements.txt
+
+      - name: Prepare output directories
+        run: |
+          mkdir -p data/clean
+          mkdir -p docs
+
+      - name: Extract GOLD and SILVER data
+        run: |
+          if [ -f "Gold and Silver.txt" ]; then
+            python scripts/extract_gold_silver.py --input "Gold and Silver.txt" --outdir data/clean
+            echo "✅ Gold and Silver data extracted"
+          else
+            echo "⚠️ Gold and Silver.txt not found, skipping extraction"
+          fi
+        continue-on-error: true
+
+      - name: Build FX COT summary
+        run: |
+          if [ -f "Historical FX Future & Options Combined.txt" ]; then
+            python scripts/fx_cot_brief.py --input "Historical FX Future & Options Combined.txt" --outdir data/clean
+            echo "✅ FX COT data processed"
+          else
+            echo "⚠️ Historical FX Future & Options Combined.txt not found, skipping"
+          fi
+        continue-on-error: true
+
+      - name: Generate HTML COT Report
+        run: |
+          python scripts/generate_cot_report.py --data-dir data/clean --outdir docs
+          echo "✅ COT Trader Brief generated"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Upload report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cot-weekly-report
+          path: |
+            docs/index.html
+            docs/*.png
+            data/clean/*.csv
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Print summary
+        run: |
+          echo "📊 COT Weekly Report Generated Successfully!"
+          echo "🌐 Report URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "📁 Artifacts uploaded for download"
+          
+          # Print file sizes for verification
+          echo "📈 Generated files:"
+          find docs -name "*.html" -o -name "*.png" | while read file; do
+            size=$(du -h "$file" | cut -f1)
+            echo "  $file ($size)"
+          done
