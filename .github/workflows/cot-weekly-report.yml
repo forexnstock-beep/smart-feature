@@ -1,0 +1,76 @@
+name: COT weekly report
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_outputs:
+        description: "Commit generated HTML report and charts to docs/"
+        type: boolean
+        default: true
+  schedule:
+    # CFTC releases Friday; run early Saturday UTC
+    - cron: "30 1 * * 6"
+
+permissions:
+  contents: write
+
+jobs:
+  build-cot-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f scripts/requirements.txt ]; then
+            pip install -r scripts/requirements.txt
+          else
+            pip install pandas numpy matplotlib
+          fi
+
+      - name: Refresh COT CSVs (FX + metals)
+        run: |
+          set -e
+          if [ -f scripts/fx_cot_brief.py ]; then
+            python scripts/fx_cot_brief.py --input "Historical FX Future & Options Combined.txt"
+          fi
+          if [ -f scripts/extract_gold_silver.py ]; then
+            python scripts/extract_gold_silver.py --input "Gold and Silver.txt" --outdir data/clean
+          fi
+          ls -la data/clean || true
+
+      - name: Generate HTML report
+        run: |
+          python scripts/generate_cot_report.py
+          echo "Files in docs/:"
+          ls -la docs || true
+
+      - name: Commit report artifacts
+        # Commit on schedule automatically; on manual runs, commit when the checkbox is true
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.commit_outputs == true }}
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/cot_report.html docs/charts || true
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(cot): weekly COT report with charts"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Upload artifacts (always)
+        uses: actions/upload-artifact@v4
+        with:
+          name: cot-weekly-report
+          path: |
+            docs/cot_report.html
+            docs/charts
