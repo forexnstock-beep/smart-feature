@@ -38,11 +38,12 @@ jobs:
       - name: Refresh COT CSVs (FX + metals)
         run: |
           set -e
+          mkdir -p data/clean
           if [ -f scripts/fx_cot_brief.py ]; then
-            python scripts/fx_cot_brief.py
+            python scripts/fx_cot_brief.py --input "Historical FX Future & Options Combined.txt" --outdir data/clean
           fi
           if [ -f scripts/extract_gold_silver.py ]; then
-            python scripts/extract_gold_silver.py
+            python scripts/extract_gold_silver.py --input "Gold and Silver.txt" --outdir data/clean
           fi
           ls -la data/clean || true
 

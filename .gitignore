@@ -13,3 +13,7 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Generated COT reports and charts (created by workflow)
+docs/cot_report.html
+docs/charts/*.png
